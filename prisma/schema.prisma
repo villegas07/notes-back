@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String     @id @default(uuid())
+  email                     String     @unique
+  password                  String
+  firstName                 String     @map("first_name")
+  lastName                  String     @map("last_name")
+  isEmailVerified           Boolean    @default(false) @map("is_email_verified")
+  emailVerificationToken    String?    @unique @map("email_verification_token")
+  emailVerificationExpires  DateTime?  @map("email_verification_expires")
+  resetPasswordToken        String?    @map("reset_password_token")
+  resetPasswordExpires      DateTime?  @map("reset_password_expires")
+  createdAt                 DateTime   @default(now()) @map("created_at")
+  updatedAt                 DateTime   @updatedAt @map("updated_at")
+  
+  notes                     Note[]
+  passwordResetHistory      PasswordResetHistory[]
+
+  @@map("users")
+}
+
+model Note {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  isArchived  Boolean    @default(false) @map("is_archived")
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  
+  userId      String     @map("user_id")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  categories  NoteCategory[]
+
+  @@map("notes")
+  @@index([userId])
+  @@index([isArchived])
+  @@index([isActive])
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  
+  notes     NoteCategory[]
+
+  @@map("categories")
+}
+
+model NoteCategory {
+  noteId     String     @map("note_id")
+  categoryId String     @map("category_id")
+  
+  note       Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  @@id([noteId, categoryId])
+  @@map("note_categories")
+}
+
+model PasswordResetHistory {
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resetToken        String   @unique @map("reset_token")
+  resetTokenExpires DateTime @map("reset_token_expires")
+  isUsed            Boolean  @default(false) @map("is_used")
+  createdAt         DateTime @default(now()) @map("created_at")
+  usedAt            DateTime? @map("used_at")
+
+  @@map("password_reset_history")
+  @@index([userId])
+  @@index([resetToken])
+}
