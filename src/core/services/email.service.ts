@@ -8,11 +8,11 @@ export class EmailService {
   constructor() {
     // Configurar transportador de email con Google App Password
     this.transporter = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
+      host: "bulk.smtp.mailtrap.io",
+      port: 587,
       auth: {
-        user: process.env.MAILTRAP_USER || '8a19ac0affcc2d',
-        pass: process.env.MAILTRAP_PASS || '9f1bd5117e4a18',
+        user: "api",
+        pass: process.env.MAILTRAP_API_TOKEN || "3349f68a1e759d91bc6e1ec673743473",
       },
     });
     this.transporter.verify((error, success) => {
