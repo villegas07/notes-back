@@ -8,17 +8,18 @@ export class EmailService {
   constructor() {
     // Configurar transportador de email con Google App Password
     this.transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'sandbox.smtp.mailtrap.io',
+      port: 2525,
       auth: {
-        user: process.env.GOOGLE_APP_EMAIL,
-        pass: process.env.GOOGLE_APP_PASSWORD,
+        user: process.env.MAILTRAP_USER || '8a19ac0affcc2d',
+        pass: process.env.MAILTRAP_PASS || '9f1bd5117e4a18',
       },
     });
     this.transporter.verify((error, success) => {
       if (error) {
-        console.error('[EMAIL SERVICE] Error connecting to SMTP:', error);
+        console.error('[EMAIL SERVICE] Error connecting to Mailtrap SMTP:', error);
       } else {
-        console.log('[EMAIL SERVICE] SMTP connection successful');
+        console.log('[EMAIL SERVICE] Mailtrap SMTP connection successful');
       }
     });
   }
