@@ -13,7 +13,7 @@ export class EmailService {
    * Envía un correo de verificación de email
    */
   async sendVerificationEmail(email: string, verificationToken: string): Promise<void> {
-    const verificationUrl = `${process.env.FRONTEND_URL}/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?email=${encodeURIComponent(email)}&token=${verificationToken}`;
     const htmlContent = `
       <h2>¡Bienvenido a Notes!</h2>
       <p>Por favor, verifica tu correo electrónico haciendo clic en el siguiente enlace:</p>
@@ -43,7 +43,7 @@ export class EmailService {
    * Envía un correo de recuperación de contraseña
    */
   async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
-    const resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
     const htmlContent = `
       <h2>Recuperación de Contraseña</h2>
       <p>Hemos recibido una solicitud para resetear tu contraseña. Haz clic en el siguiente enlace:</p>
