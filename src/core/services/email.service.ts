@@ -14,6 +14,13 @@ export class EmailService {
         pass: process.env.GOOGLE_APP_PASSWORD,
       },
     });
+    this.transporter.verify((error, success) => {
+      if (error) {
+        console.error('[EMAIL SERVICE] Error connecting to SMTP:', error);
+      } else {
+        console.log('[EMAIL SERVICE] SMTP connection successful');
+      }
+    });
   }
 
   /**
