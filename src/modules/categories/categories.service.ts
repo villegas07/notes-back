@@ -12,8 +12,7 @@ export class CategoriesService {
     if (existingCategory) {
       throw new ConflictException('Category already exists');
     }
-
-    return this.categoriesRepository.create(createCategoryDto.name);
+    return this.categoriesRepository.create(createCategoryDto.name, createCategoryDto.color);
   }
 
   async findAll(): Promise<Category[]> {

@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 export interface Category {
   id: string;
   name: string;
+  color: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -12,9 +13,9 @@ export interface Category {
 export class CategoriesRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async create(name: string): Promise<Category> {
+  async create(name: string, color: string): Promise<Category> {
     return this.prismaService.category.create({
-      data: { name },
+      data: { name, color },
     });
   }
 
@@ -27,19 +28,21 @@ export class CategoriesRepository {
   async findAll(): Promise<Category[]> {
     return this.prismaService.category.findMany({
       orderBy: { name: 'asc' },
+      select: { id: true, name: true, color: true, createdAt: true, updatedAt: true },
     });
   }
 
   async findByName(name: string): Promise<Category | null> {
     return this.prismaService.category.findUnique({
       where: { name },
+      select: { id: true, name: true, color: true, createdAt: true, updatedAt: true },
     });
   }
 
-  async update(id: string, name: string): Promise<Category> {
+  async update(id: string, name: string, color: string): Promise<Category> {
     return this.prismaService.category.update({
       where: { id },
-      data: { name },
+      data: { name, color },
     });
   }
 

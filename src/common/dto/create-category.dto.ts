@@ -7,4 +7,10 @@ export class CreateCategoryDto {
   @MinLength(1)
   @MaxLength(100)
   name: string;
+
+  @ApiProperty({ example: '#10b981', description: 'Color de la categoría (hex, rgb, etc)', minLength: 4, maxLength: 8, required: true })
+  @IsString()
+  @MinLength(4)
+  @MaxLength(8)
+  color: string;
 }
