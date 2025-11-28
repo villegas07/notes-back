@@ -1,27 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 @Injectable()
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend;
 
   constructor() {
-    // Configurar transportador de email con Google App Password
-    this.transporter = nodemailer.createTransport({
-      host: "bulk.smtp.mailtrap.io",
-      port: 587,
-      auth: {
-        user: "api",
-        pass: process.env.MAILTRAP_API_TOKEN || "3349f68a1e759d91bc6e1ec673743473",
-      },
-    });
-    this.transporter.verify((error, success) => {
-      if (error) {
-        console.error('[EMAIL SERVICE] Error connecting to Mailtrap SMTP:', error);
-      } else {
-        console.log('[EMAIL SERVICE] Mailtrap SMTP connection successful');
-      }
-    });
+    this.resend = new Resend(process.env.RESEND_API_KEY || 're_RSgFqYBp_BJfuQTbXn6JgmEf7KR9K9b4h');
   }
 
   /**
@@ -29,7 +14,6 @@ export class EmailService {
    */
   async sendVerificationEmail(email: string, verificationToken: string): Promise<void> {
     const verificationUrl = `${process.env.FRONTEND_URL}/auth/verify-email?token=${verificationToken}`;
-
     const htmlContent = `
       <h2>¡Bienvenido a Notes!</h2>
       <p>Por favor, verifica tu correo electrónico haciendo clic en el siguiente enlace:</p>
@@ -41,10 +25,9 @@ export class EmailService {
       <p>Este enlace expira en 24 horas.</p>
       <p>Si no creaste esta cuenta, ignora este correo.</p>
     `;
-
     try {
-      await this.transporter.sendMail({
-        from: process.env.GOOGLE_APP_EMAIL,
+      await this.resend.emails.send({
+        from: 'onboarding@resend.dev',
         to: email,
         subject: 'Verifica tu email - Notes App',
         html: htmlContent,
@@ -61,7 +44,6 @@ export class EmailService {
    */
   async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
     const resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password?token=${resetToken}`;
-
     const htmlContent = `
       <h2>Recuperación de Contraseña</h2>
       <p>Hemos recibido una solicitud para resetear tu contraseña. Haz clic en el siguiente enlace:</p>
@@ -73,10 +55,9 @@ export class EmailService {
       <p>Este enlace expira en 15 minutos.</p>
       <p>Si no solicitaste este reset, ignora este correo.</p>
     `;
-
     try {
-      await this.transporter.sendMail({
-        from: process.env.GOOGLE_APP_EMAIL,
+      await this.resend.emails.send({
+        from: 'onboarding@resend.dev',
         to: email,
         subject: 'Recupera tu contraseña - Notes App',
         html: htmlContent,
