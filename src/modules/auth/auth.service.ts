@@ -146,17 +146,16 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const user = await this.usersRepository.findByEmail(signInDto.email);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('El usuario no está registrado');
     }
 
-    // Verificar que el email esté verificado
     if (!user.isEmailVerified) {
-      throw new UnauthorizedException('Please verify your email before signing in');
+      throw new UnauthorizedException('El usuario no ha verificado su correo electrónico');
     }
 
     const isPasswordValid = await this.passwordService.comparePassword(signInDto.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('La contraseña es incorrecta');
     }
 
     const accessToken = this.tokenService.generateToken(user.id, user.email);
