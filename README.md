@@ -42,7 +42,7 @@ Sistema de gestión de notas con autenticación JWT, construido con NestJS, Post
 - Crear categorías
 - Listar categorías
 
-#### Autenticación
+## Autenticación
 - Sign Up con email/password
 - Sign In con JWT
 - Protección de rutas con JWT Guard
