@@ -35,12 +35,26 @@ export class NotesRepository {
         userId: input.userId,
         isActive: true,
       },
+      include: {
+        categories: {
+          include: {
+            category: true
+          }
+        }
+      }
     }) as unknown as Promise<Note>;
   }
 
   async findById(id: string, userId: string): Promise<Note | null> {
     return this.prismaService.note.findFirst({
       where: { id, userId, isActive: true },
+      include: {
+        categories: {
+          include: {
+            category: true
+          }
+        }
+      }
     }) as unknown as Promise<Note | null>;
   }
 
@@ -48,6 +62,13 @@ export class NotesRepository {
     return this.prismaService.note.findMany({
       where: { userId, isArchived: false, isActive: true },
       orderBy: { createdAt: 'desc' },
+      include: {
+        categories: {
+          include: {
+            category: true
+          }
+        }
+      }
     }) as unknown as Promise<Note[]>;
   }
 
@@ -55,6 +76,13 @@ export class NotesRepository {
     return this.prismaService.note.findMany({
       where: { userId, isArchived: true, isActive: true },
       orderBy: { createdAt: 'desc' },
+      include: {
+        categories: {
+          include: {
+            category: true
+          }
+        }
+      }
     }) as unknown as Promise<Note[]>;
   }
 
