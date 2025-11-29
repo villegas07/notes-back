@@ -53,7 +53,6 @@ model Category {
   color     String?
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  
   notes     NoteCategory[]
 
   @@map("categories")
@@ -62,10 +61,8 @@ model Category {
 model NoteCategory {
   noteId     String     @map("note_id")
   categoryId String     @map("category_id")
-  
   note       Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
   category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  
   @@id([noteId, categoryId])
   @@map("note_categories")
 }

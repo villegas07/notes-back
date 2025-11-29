@@ -47,7 +47,7 @@ Sistema de gestión de notas con autenticación JWT, construido con NestJS, Post
 - Sign In con JWT
 - Protección de rutas con JWT Guard
 
-### Requisitos
+## Requisitos
 
 - **Node.js**: 20.x o superior
 - **npm**: 10.x o superior
