@@ -4,7 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 export interface Category {
   id: string;
   name: string;
-  color?: string;
+  color: string | null | undefined;
   createdAt: Date;
   updatedAt: Date;
 }
